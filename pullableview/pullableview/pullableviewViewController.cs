@@ -42,9 +42,10 @@ namespace pullableview
                 ClosedCenter = new PointF(-70, 200),
                 Center = pullRightView.ClosedCenter,
                 Animate = false,
-                HandleView.BackgroundColor = UIColor.DarkGray,
-                HandleView.Frame = new RectangleF(170, 0, 30, 300),
             };
+            pullRightView.HandleView.BackgroundColor = UIColor.DarkGray;
+            pullRightView.HandleView.Frame = new RectangleF(170, 0, 30, 300);
+
             this.View.AddSubview(pullRightView);
             UILabel label = new UILabel(new RectangleF(0, 0, 200, 30))
             {
@@ -67,9 +68,9 @@ namespace pullableview
                 OpenedCenter = new PointF(160 + xOffset, this.View.Frame.Size.Height),
                 ClosedCenter = new PointF(160 + xOffset, this.View.Frame.Size.Height + 200),
                 Center = pullUpView.ClosedCenter,
-                HandleView.Frame = new RectangleF(0, 0, 320, 40),
                 TheDelegate = this,
             };
+            pullUpView.HandleView.Frame = new RectangleF(0, 0, 320, 40),
             this.View.AddSubview(pullUpView);
             pullUpLabel = new UILabel(new RectangleF(0, 4, 320, 20))
             {
