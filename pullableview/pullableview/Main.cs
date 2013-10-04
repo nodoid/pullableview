@@ -1,31 +1,16 @@
-//
-// Prefix header for all source files of the 'PullableView' target in the 'PullableView' project
-//
+using MonoTouch.UIKit;
 
-#ifndef __IPHONE_4_0
-    #warning "This project uses features only available in iOS SDK 4.0 and later."
-#endif
-
-#ifdef __OBJC__
-#endif
-
-//
-//  main.m
-//  PullableView
-//
-//  Created by Fabio Rodella on 1/20/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
 namespace pullableview
 {
-int main (int argc, char[] argv)
-{
-    @autoreleasepool
+    public class Application
     {
-        return UIApplicationMain(argc, argv, null, NSStringFromClass(typeof(AppDelegate)));
-    }}
+        // This is the main entry point of the application.
+        static void Main(string[] args)
+        {
+            // if you want to use a different Application Delegate class from "AppDelegate"
+            // you can specify it here.
+            UIApplication.Main(args, null, "AppDelegate");
+        }
+    }
 }
-#import <Availability.h>
-#import <UIKit/UIKit.h>
-using System;
-#import <UIKit/UIKit.h>
+
