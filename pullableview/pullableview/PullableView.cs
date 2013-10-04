@@ -3,6 +3,7 @@ using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using MonoTouch.CoreGraphics;
+using MonoTouch.ObjCRuntime;
 
 namespace pullableview
 {
@@ -18,18 +19,18 @@ namespace pullableview
         
            */
         void PullableViewDidChangeState(PullableView pView, bool opened);
-
     }
+
     public class PullableView : UIView
     {
-        protected CGPoint closedCenter;
-        protected CGPoint openedCenter;
+        protected PointF closedCenter;
+        protected PointF openedCenter;
+        protected PointF startPos;
+        protected PointF minPos;
+        protected PointF maxPos;
         protected UIView handleView;
         protected UIPanGestureRecognizer dragRecognizer;
         protected UITapGestureRecognizer tapRecognizer;
-        protected CGPoint startPos;
-        protected CGPoint minPos;
-        protected CGPoint maxPos;
         protected bool opened;
         protected bool verticalAxis;
         protected bool toggleOnTap;
@@ -170,7 +171,7 @@ namespace pullableview
             }
         }
 
-        public CGPoint ClosedCenter
+        public PointF ClosedCenter
         {
             get
             {
@@ -182,7 +183,7 @@ namespace pullableview
             }
         }
 
-        public CGPoint OpenedCenter
+        public PointF OpenedCenter
         {
             get
             {
@@ -254,103 +255,100 @@ namespace pullableview
             }
         }
 
-        PullableView(CGRect frame)
-            : base (frame)
+        PullableView(RectangleF frame) : base(frame)
         {
             animate = true;
             animationDuration = 0.2;
             toggleOnTap = true;
             // Creates the handle view. Subclasses should resize, reposition and style this view
-            handleView = new UIView(CGRectMake(0, frame.Size.Height - 40, frame.Size.Width, 40));
+            handleView = new UIView(new RectangleF(0, frame.Size.Height - 40, frame.Size.Width, 40));
             this.AddSubview(handleView);
-            dragRecognizer = new UIPanGestureRecognizer(this, @selector (handleDrag:));
+            dragRecognizer = new UIPanGestureRecognizer(this, new Selector("handleDrag"));
             dragRecognizer.MinimumNumberOfTouches = 1;
             dragRecognizer.MaximumNumberOfTouches = 1;
             handleView.AddGestureRecognizer(dragRecognizer);
-            tapRecognizer = new UITapGestureRecognizer(this, @selector (handleTap:));
+            tapRecognizer = new UITapGestureRecognizer(this, new Selector("handleTap"));
             tapRecognizer.NumberOfTapsRequired = 1;
             tapRecognizer.NumberOfTouchesRequired = 1;
             handleView.AddGestureRecognizer(tapRecognizer);
             opened = false;
         }
 
+        [Export("handleDrag")]
         void HandleDrag(UIPanGestureRecognizer sender)
         {
-            if (sender.State() == UIGestureRecognizerState.Began)
+            switch (sender.State)
             {
-                startPos = this.Center;
+                case UIGestureRecognizerState.Began:
+                    startPos = this.Center;
                 // Determines if the view can be pulled in the x or y axis
-                verticalAxis = closedCenter.X == openedCenter.X;
+                    verticalAxis = closedCenter.X == openedCenter.X;
                 // Finds the minimum and maximum points in the axis
-                if (verticalAxis)
-                {
-                    minPos = closedCenter.Y < openedCenter.Y ? closedCenter : openedCenter;
-                    maxPos = closedCenter.Y > openedCenter.Y ? closedCenter : openedCenter;
-                }
-                else
-                {
-                    minPos = closedCenter.X < openedCenter.X ? closedCenter : openedCenter;
-                    maxPos = closedCenter.X > openedCenter.X ? closedCenter : openedCenter;
-                }
-
-            }
-            else if (sender.State() == UIGestureRecognizerState.Changed)
-            {
-                CGPoint translate = sender.TranslationInView(this.Superview);
-                CGPoint newPos;
+                    if (verticalAxis)
+                    {
+                        minPos = closedCenter.Y < openedCenter.Y ? closedCenter : openedCenter;
+                        maxPos = closedCenter.Y > openedCenter.Y ? closedCenter : openedCenter;
+                    }
+                    else
+                    {
+                        minPos = closedCenter.X < openedCenter.X ? closedCenter : openedCenter;
+                        maxPos = closedCenter.X > openedCenter.X ? closedCenter : openedCenter;
+                    }
+                    break;
+                case UIGestureRecognizerState.Changed:
+                    PointF translate = sender.TranslationInView(this.Superview);
+                    PointF newPos;
                 // Moves the view, keeping it constrained between openedCenter and closedCenter
-                if (verticalAxis)
-                {
-                    newPos = CGPointMake(startPos.X, startPos.Y + translate.Y);
-                    if (newPos.Y < minPos.Y)
+                    if (verticalAxis)
                     {
-                        newPos.Y = minPos.Y;
-                        translate = CGPointMake(0, newPos.Y - startPos.Y);
-                    }
+                        newPos = new PointF(startPos.X, startPos.Y + translate.Y);
+                        if (newPos.Y < minPos.Y)
+                        {
+                            newPos.Y = minPos.Y;
+                            translate = new PointF(0, newPos.Y - startPos.Y);
+                        }
 
-                    if (newPos.Y > maxPos.Y)
+                        if (newPos.Y > maxPos.Y)
+                        {
+                            newPos.Y = maxPos.Y;
+                            translate = new PointF(0, newPos.Y - startPos.Y);
+                        }
+
+                    }
+                    else
                     {
-                        newPos.Y = maxPos.Y;
-                        translate = CGPointMake(0, newPos.Y - startPos.Y);
+                        newPos = new PointF(startPos.X + translate.X, startPos.Y);
+                        if (newPos.X < minPos.X)
+                        {
+                            newPos.X = minPos.X;
+                            translate = new PointF(newPos.X - startPos.X, 0);
+                        }
+
+                        if (newPos.X > maxPos.X)
+                        {
+                            newPos.X = maxPos.X;
+                            translate = new PointF(newPos.X - startPos.X, 0);
+                        }
                     }
-
-                }
-                else
-                {
-                    newPos = CGPointMake(startPos.X + translate.X, startPos.Y);
-                    if (newPos.X < minPos.X)
-                    {
-                        newPos.X = minPos.X;
-                        translate = CGPointMake(newPos.X - startPos.X, 0);
-                    }
-
-                    if (newPos.X > maxPos.X)
-                    {
-                        newPos.X = maxPos.X;
-                        translate = CGPointMake(newPos.X - startPos.X, 0);
-                    }
-
-                }
-
-                sender.SetTranslationInView(translate, this.Superview);
-                this.Center = newPos;
-            }
-            else if (sender.State() == UIGestureRecognizerStateEnded)
-            {
-                // Gets the velocity of the gesture in the axis, so it can be
-                // determined to which endpoint the state should be set.
-                CGPoint vectorVelocity = sender.VelocityInView(this.Superview);
-                CGFloat axisVelocity = verticalAxis ? vectorVelocity.Y : vectorVelocity.X;
-                CGPoint target = axisVelocity < 0 ? minPos : maxPos;
-                bool op = CGPointEqualToPoint(target, openedCenter);
-                this.SetOpenedAnimated(op, animate);
+                   
+                    sender.SetTranslation(translate, this.Superview);
+                    this.Center = newPos;
+                    break;
+                case UIGestureRecognizerState.Ended:
+                    PointF vectorVelocity = sender.VelocityInView(this.Superview);
+                    float axisVelocity = verticalAxis ? vectorVelocity.Y : vectorVelocity.X;
+                    PointF target = axisVelocity < 0 ? minPos : maxPos;
+                    bool op = target == openedCenter ? true : false;
+                    this.SetOpenedAnimated(op, animate);
+                    break;
             }
 
         }
 
+        [Export("handleTap")]
         void HandleTap(UITapGestureRecognizer sender)
         {
-            if (sender.State() == UIGestureRecognizerState.Ended)
+            if (sender.State == UIGestureRecognizerState.Ended)
             {
                 this.SetOpenedAnimated(!opened, animate);
             }
@@ -362,11 +360,11 @@ namespace pullableview
             opened = op;
             if (anim)
             {
-                UIView.BeginAnimationsContext(null, null);
+                UIView.BeginAnimations(null, null);
                 UIView.SetAnimationDuration(animationDuration);
-                UIView.SetAnimationCurve(UIViewAnimationCurveEaseOut);
+                UIView.SetAnimationCurve(UIViewAnimationCurve.EaseOut);
                 UIView.SetAnimationDelegate(this);
-                UIView.SetAnimationDidStopSelector(@selector (animationDidStop:finished:context:));
+                UIView.SetAnimationDidStopSelector(new Selector("animationDidStop"));
             }
 
             this.Center = opened ? openedCenter : closedCenter;
@@ -377,7 +375,10 @@ namespace pullableview
                 tapRecognizer.Enabled = false;
                 UIView.CommitAnimations();
             }
+            else
+            {
 
+            }
             /*else {
             
                
@@ -391,7 +392,8 @@ namespace pullableview
                }*/
         }
 
-        void AnimationDidStopFinishedContext(string animationID, NSNumber finished, ref void context)
+        [Export("animationDidStop")]
+        void AnimationDidStopFinishedContext(string animationID, NSNumber finished)
         {
             if (finished)
             {
@@ -406,6 +408,5 @@ namespace pullableview
             }
 
         }
-
     }
 }
