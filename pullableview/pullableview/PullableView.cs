@@ -7,7 +7,7 @@ using MonoTouch.ObjCRuntime;
 
 namespace pullableview
 {
-    public interface PullableViewDelegate : object
+    public interface PullableViewDelegate
     {
         /**
         
@@ -23,20 +23,20 @@ namespace pullableview
 
     public class PullableView : UIView
     {
-        protected PointF closedCenter;
-        protected PointF openedCenter;
-        protected PointF startPos;
-        protected PointF minPos;
-        protected PointF maxPos;
-        protected UIView handleView;
-        protected UIPanGestureRecognizer dragRecognizer;
-        protected UITapGestureRecognizer tapRecognizer;
-        protected bool opened;
-        protected bool verticalAxis;
-        protected bool toggleOnTap;
-        protected bool animate;
-        protected float animationDuration;
-        protected PullableViewDelegate theDelegate;
+        private PointF closedCenter;
+        private PointF openedCenter;
+        private PointF startPos;
+        private PointF minPos;
+        private PointF maxPos;
+        private UIView handleView;
+        private UIPanGestureRecognizer dragRecognizer;
+        private UITapGestureRecognizer tapRecognizer;
+        private bool opened;
+        private bool verticalAxis;
+        private bool toggleOnTap;
+        private bool animate;
+        private float animationDuration;
+        private PullableViewDelegate theDelegate;
 
         /**
         
@@ -113,6 +113,11 @@ namespace pullableview
            Default value is YES.
         
            */
+
+        public PullableView()
+        {
+        }
+
         public bool ToggleOnTap
         {
             get
@@ -255,10 +260,10 @@ namespace pullableview
             }
         }
 
-        PullableView(RectangleF frame) : base(frame)
+        public PullableView(RectangleF frame) : base(frame)
         {
             animate = true;
-            animationDuration = 0.2;
+            animationDuration = 0.2f;
             toggleOnTap = true;
             // Creates the handle view. Subclasses should resize, reposition and style this view
             handleView = new UIView(new RectangleF(0, frame.Size.Height - 40, frame.Size.Width, 40));
@@ -360,7 +365,7 @@ namespace pullableview
             opened = op;
             if (anim)
             {
-                UIView.BeginAnimations(null, null);
+                UIView.BeginAnimations(null, IntPtr.Zero);
                 UIView.SetAnimationDuration(animationDuration);
                 UIView.SetAnimationCurve(UIViewAnimationCurve.EaseOut);
                 UIView.SetAnimationDelegate(this);
@@ -377,6 +382,8 @@ namespace pullableview
             }
             else
             {
+                if (this.RespondsToSelector(new Selector("pullableViewDidChangeState")))
+                    theDelegate.PullableViewDidChangeState(this, true);
 
             }
             /*else {
@@ -393,13 +400,15 @@ namespace pullableview
         }
 
         [Export("animationDidStop")]
-        void AnimationDidStopFinishedContext(string animationID, NSNumber finished)
+        void AnimationDidStopFinishedContext(string animationID, bool finished)
         {
             if (finished)
             {
                 // Restores interaction after the animation is over
                 dragRecognizer.Enabled = true;
                 tapRecognizer.Enabled = toggleOnTap;
+                if (this.RespondsToSelector(new Selector("pullableViewDidChangeState")))
+                    theDelegate.PullableViewDidChangeState(this, false);
                 /*if ([delegate respondsToSelector:@selector(pullableView:didChangeState:)]) {
                 
                    [delegate pullableView:self didChangeState:opened];
