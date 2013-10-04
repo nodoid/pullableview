@@ -8,10 +8,15 @@ namespace pullableview
 {
     public class ViewController : UIViewController, PullableViewDelegate
     {
-        protected StyledPullableView pullDownView;
-        protected StyledPullableView pullUpView;
-        protected UILabel pullUpLabel;
-        protected PullableView pullRightView;
+        private StyledPullableView pullDownView;
+        private StyledPullableView pullUpView;
+        private UILabel pullUpLabel;
+        private PullableView pullRightView;
+
+        public ViewController(string controller, bool t)
+        {
+
+        }
 
         static bool UserInterfaceIdiomIsPhone
         {
@@ -47,12 +52,13 @@ namespace pullableview
             pullRightView.HandleView.Frame = new RectangleF(170, 0, 30, 300);
 
             this.View.AddSubview(pullRightView);
+            float rot = (float)(Math.PI / 2);
             UILabel label = new UILabel(new RectangleF(0, 0, 200, 30))
             {
                 BackgroundColor = UIColor.DarkGray,
                 TextColor = UIColor.White,
                 Text = "Pull me to the right!",
-                Transform = CGAffineTransform.MakeRotation(-M_PI_2),
+                Transform = CGAffineTransform.MakeRotation(-rot),
                 Center = new PointF(185, 150),
             };
             pullRightView.AddSubview(label);
@@ -60,7 +66,7 @@ namespace pullableview
             {
                 BackgroundColor = UIColor.Clear,
                 TextColor = UIColor.White,
-            Text = "I'm not animated"
+                Text = "I'm not animated"
             };
             pullRightView.AddSubview(label);
             pullUpView = new StyledPullableView(new RectangleF(xOffset, 0, 320, 460))
@@ -70,7 +76,7 @@ namespace pullableview
                 Center = pullUpView.ClosedCenter,
                 TheDelegate = this,
             };
-            pullUpView.HandleView.Frame = new RectangleF(0, 0, 320, 40),
+            pullUpView.HandleView.Frame = new RectangleF(0, 0, 320, 40);
             this.View.AddSubview(pullUpView);
             pullUpLabel = new UILabel(new RectangleF(0, 4, 320, 20))
             {
@@ -109,7 +115,8 @@ namespace pullableview
             pullDownView.AddSubview(label);
         }
 
-        void PullableViewDidChangeState(PullableView pView, bool opened)
+        [Export("pullableViewDidChangeState")]
+        public void PullableViewDidChangeState(PullableView pView, bool opened)
         {
             if (opened)
             {
