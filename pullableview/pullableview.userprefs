@@ -1,0 +1,34 @@
+﻿<Properties GitUserInfo="UsingGIT">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.Paul Johnson’s iPhone" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="pullableview/AppDelegate.cs">
+    <Files>
+      <File FileName="pullableview/AppDelegate.cs" Line="57" Column="10" />
+      <File FileName="pullableview/Main.cs" Line="1" Column="1" />
+      <File FileName="../../hellou/hellou-ios/hellou/hellou/Deals/DisplayAllDeals.cs" Line="1" Column="1" />
+      <File FileName="pullableview/StyledPullableView.cs" Line="1" Column="1" />
+      <File FileName="pullableview/pullableviewViewController.cs" Line="1" Column="1" />
+      <File FileName="pullableview/PullableView.cs" Line="1" Column="1" />
+      <File FileName="../../hellou/hellou-ios/hellou/hellou/AppDelegate.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="pullableview" expanded="True" selected="True" />
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+      <Pad Id="ConnectionManagerPad">
+        <State selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
