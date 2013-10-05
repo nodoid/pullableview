@@ -6,7 +6,8 @@ using MonoTouch.UIKit;
 
 namespace pullableview
 {
-    public class AppDelegate : UIApplicationDelegate
+    [Register("AppDelegate")]
+    public partial class AppDelegate : UIApplicationDelegate
     {
         //
         // Prefix header for all source files of the 'PullableView' target in the 'PullableView' project
@@ -31,11 +32,11 @@ namespace pullableview
             // Override point for customization after application launch.
             if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone)
             {
-                this.ViewController = new ViewController("ViewController_iPhone", false);
+                this.ViewController = new ViewController("pullableviewViewController_iPhone", false);
             }
             else
             {
-                this.ViewController = new ViewController("ViewController_iPad", false);
+                this.ViewController = new ViewController("pullableviewViewController_iPad", false);
             }
 
             this.Window.RootViewController = this.ViewController;

@@ -45,9 +45,10 @@ namespace pullableview
                 BackgroundColor = UIColor.LightGray,
                 OpenedCenter = new PointF(100, 200),
                 ClosedCenter = new PointF(-70, 200),
-                Center = pullRightView.ClosedCenter,
+
                 Animate = false,
             };
+            pullRightView.Center = pullRightView.ClosedCenter;
             pullRightView.HandleView.BackgroundColor = UIColor.DarkGray;
             pullRightView.HandleView.Frame = new RectangleF(170, 0, 30, 300);
 
@@ -73,9 +74,9 @@ namespace pullableview
             {
                 OpenedCenter = new PointF(160 + xOffset, this.View.Frame.Size.Height),
                 ClosedCenter = new PointF(160 + xOffset, this.View.Frame.Size.Height + 200),
-                Center = pullUpView.ClosedCenter,
                 TheDelegate = this,
             };
+            pullUpView.Center = pullUpView.ClosedCenter;
             pullUpView.HandleView.Frame = new RectangleF(0, 0, 320, 40);
             this.View.AddSubview(pullUpView);
             pullUpLabel = new UILabel(new RectangleF(0, 4, 320, 20))
@@ -100,8 +101,9 @@ namespace pullableview
             {
                 OpenedCenter = new PointF(160 + xOffset, 230),
                 ClosedCenter = new PointF(160 + xOffset, -200),
-                Center = pullDownView.ClosedCenter,
             };
+            pullDownView.Center = pullDownView.ClosedCenter;
+
             this.View.AddSubview(pullDownView);
             label = new UILabel(new RectangleF(0, 200, 320, 64))
             {
@@ -115,7 +117,6 @@ namespace pullableview
             pullDownView.AddSubview(label);
         }
 
-        [Export("pullableViewDidChangeState")]
         public void PullableViewDidChangeState(PullableView pView, bool opened)
         {
             if (opened)

@@ -174,6 +174,10 @@ namespace pullableview
             {
                 return handleView;
             }
+            set
+            {
+                HandleView = value;
+            }
         }
 
         public PointF ClosedCenter
@@ -382,8 +386,7 @@ namespace pullableview
             }
             else
             {
-                if (this.RespondsToSelector(new Selector("pullableViewDidChangeState")))
-                    theDelegate.PullableViewDidChangeState(this, true);
+                theDelegate.PullableViewDidChangeState(this, true);
 
             }
             /*else {
@@ -407,8 +410,7 @@ namespace pullableview
                 // Restores interaction after the animation is over
                 dragRecognizer.Enabled = true;
                 tapRecognizer.Enabled = toggleOnTap;
-                if (this.RespondsToSelector(new Selector("pullableViewDidChangeState")))
-                    theDelegate.PullableViewDidChangeState(this, false);
+                theDelegate.PullableViewDidChangeState(this, false);
                 /*if ([delegate respondsToSelector:@selector(pullableView:didChangeState:)]) {
                 
                    [delegate pullableView:self didChangeState:opened];
