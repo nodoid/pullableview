@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using MonoTouch.SlideoutNavigation;
-using MonoTouch.Dialog;
 
 namespace pullableview
 {
-    public class AppDelegate : UIResponder, UIApplicationDelegate
+    [Register("AppDelegate")]
+    public partial class AppDelegate : UIApplicationDelegate
     {
         //
         // Prefix header for all source files of the 'PullableView' target in the 'PullableView' project
@@ -27,17 +26,17 @@ namespace pullableview
 
         public ViewController ViewController { get; set; }
 
-        public override bool ApplicationDidFinishLaunchingWithOptions(UIApplication application, NSDictionary launchOptions)
+        public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
             this.Window = new UIWindow(UIScreen.MainScreen.Bounds);
             // Override point for customization after application launch.
             if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone)
             {
-                this.ViewController = new ViewController("ViewController_iPhone", null);
+                this.ViewController = new ViewController("pullableviewViewController_iPhone", false);
             }
             else
             {
-                this.ViewController = new ViewController("ViewController_iPad", null);
+                this.ViewController = new ViewController("pullableviewViewController_iPad", false);
             }
 
             this.Window.RootViewController = this.ViewController;
@@ -45,18 +44,7 @@ namespace pullableview
             return true;
         }
 
-        public override void ApplicationWillResignActive(UIApplication application)
-        {
-            /*
-            
-            Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-            
-               Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-            
-               */
-        }
-
-        public override void ApplicationDidEnterBackground(UIApplication application)
+        public override void DidEnterBackground(UIApplication application)
         {
             /*
             
@@ -67,7 +55,7 @@ namespace pullableview
                */
         }
 
-        public override void ApplicationWillEnterForeground(UIApplication application)
+        public override void WillEnterForeground(UIApplication application)
         {
             /*
             
@@ -76,7 +64,7 @@ namespace pullableview
                */
         }
 
-        public override void ApplicationDidBecomeActive(UIApplication application)
+        public override void OnActivated(UIApplication application)
         {
             /*
             
@@ -85,7 +73,7 @@ namespace pullableview
                */
         }
 
-        public override void ApplicationWillTerminate(UIApplication application)
+        public override void WillTerminate(UIApplication application)
         {
             /*
             
